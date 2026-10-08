@@ -1,0 +1,748 @@
+@use "./../core/colors" as *;
+
+$toggled_sidebar_width: 53px;
+$expanded_sidebar_width: 240px;
+
+$sidebar_items_fontSize: 16px;
+$sidebar_items_fontWeight: 450;
+$sidebar_items_letterSpacing: 1px;
+$sidebar_items_fontColor: #565656;
+
+
+// ======================================================
+// SIDEBAR PRINCIPAL
+// ======================================================
+
+.header-content {
+    position: relative;
+    top: 0;
+    left: 0;
+
+    height: 100%;
+    width: $toggled_sidebar_width;
+
+    background-color: $base_color;
+
+    z-index: 100;
+
+    transition: width 0.3s ease;
+
+    // ==================================================
+    // MENU
+    // ==================================================
+
+    .layout-menu {
+        position: relative;
+
+        width: $toggled_sidebar_width;
+        height: 100%;
+
+        // ==================================================
+        // MENU ICONS - LEFT SIDEBAR
+        // ==================================================
+
+        .layout-menu-nav {
+            position: relative;
+
+            width: $toggled_sidebar_width;
+            height: 100%;
+
+            padding: 0;
+            margin: 0;
+
+            text-align: center;
+
+            display: block;
+
+            background-color: $base_color;
+
+            // ----------------------------------------------
+            // HEADER
+            // ----------------------------------------------
+
+            .menu-nav-header {
+
+                height: 150px;
+
+                border-bottom: 1px solid #b2cde073;
+
+                display: flex;
+                flex-direction: column;
+
+                justify-content: space-evenly;
+                align-items: center;
+
+                .icon-btn {
+
+                    cursor: pointer;
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    mat-icon {
+
+                        width: 30px;
+                        height: 30px;
+
+                        font-size: 27px;
+
+                        color: $second_color;
+
+                        font-weight: 700;
+
+                        cursor: pointer;
+
+                        transition: transform 0.2s ease;
+
+                        &:hover {
+                            transform: scale(1.08);
+                        }
+                    }
+                }
+            }
+
+            // ----------------------------------------------
+            // MODULE ICONS
+            // ----------------------------------------------
+
+            .menu-nav-body {
+
+                width: 100%;
+
+                .menu-nav-body-item {
+
+                    margin-top: 25px;
+
+                    padding: 3px 0 0 0;
+
+                    background-color: transparent;
+
+                    cursor: pointer;
+
+                    transition: all 200ms linear;
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    img {
+
+                        width: 30px;
+                        height: 30px;
+
+                        object-fit: contain;
+
+                        cursor: pointer;
+                    }
+
+                    &:hover {
+
+                        transform: translateX(1px);
+
+                    }
+                }
+
+                .menu-nav-body-item-active {
+
+                    border-left: 3px solid white;
+
+                    img {
+                        transform: scale(1.05);
+                    }
+                }
+            }
+
+            // ----------------------------------------------
+            // FOOTER
+            // ----------------------------------------------
+
+            .menu-nav-footer {
+
+                position: absolute;
+
+                bottom: 10px;
+                left: 0;
+
+                width: 100%;
+                height: 60px;
+
+                border-top: 1px solid #b2cde073;
+
+                .menu-nav-footer-item {
+
+                    margin-top: 30px;
+
+                    color: white;
+                }
+            }
+        }
+
+
+        // ==================================================
+        // EXPANDED MENU CONTENT
+        // ==================================================
+
+        .layout-menu-content {
+
+            position: absolute;
+
+            top: 0;
+            left: $toggled_sidebar_width;
+
+            width: 0;
+            height: 100%;
+
+            background-color: white;
+
+            overflow: hidden;
+
+            transition: width 0.3s ease;
+
+            box-shadow: 2px 4px 4px rgba(0, 0, 0, 0.25);
+
+            /*
+             * IMPORTANT :
+             * éviter z-index négatif qui peut provoquer
+             * des problèmes de clic / superposition.
+             */
+            z-index: 1;
+
+
+            // ==================================================
+            // CONTENT HEADER
+            // ==================================================
+
+            .menu-content-header {
+
+                display: flex;
+
+                flex-direction: column;
+
+                align-items: center;
+
+                justify-content: space-evenly;
+
+                position: relative;
+
+                height: 150px;
+                width: 100%;
+
+                border-bottom: 1px solid #b2cde073;
+
+
+                // ----------------------------------------------
+                // MODULE LOGO
+                // ----------------------------------------------
+
+                .logo {
+
+                    border-radius: 100%;
+
+                    height: 60px;
+                    width: 60px;
+
+                    display: flex;
+
+                    justify-content: center;
+                    align-items: center;
+
+                    flex-shrink: 0;
+
+                    mat-icon {
+
+                        width: 40px;
+                        height: 40px;
+
+                        font-size: 40px;
+
+                        display: flex;
+
+                        justify-content: center;
+                        align-items: center;
+                    }
+
+                    img {
+
+                        width: 40px;
+                        height: 40px;
+
+                        object-fit: contain;
+                    }
+                }
+
+
+                // ----------------------------------------------
+                // TITLE
+                // ----------------------------------------------
+
+                .title {
+
+                    font-weight: 900;
+
+                    width: 75%;
+
+                    text-align: center;
+
+                    h1 {
+
+                        margin: 0;
+
+                        letter-spacing: 1px;
+
+                        font-weight: 600;
+
+                        font-size: 27px;
+
+                        line-height: 1.2;
+                    }
+                }
+
+
+                // ----------------------------------------------
+                // SEARCH
+                // ----------------------------------------------
+
+                .search-input {
+
+                    width: 85%;
+
+                    margin-top: 15px;
+
+                    input {
+
+                        width: calc(100% - 20px);
+
+                        padding: 10px;
+
+                        border: none;
+
+                        background-color: #edecec;
+
+                        border-radius: 15px;
+
+                        &:focus-visible {
+
+                            outline: #c6c6c7 solid 1px;
+                        }
+                    }
+                }
+            }
+
+
+            // ==================================================
+            // CONTENT BODY
+            // ==================================================
+
+            .menu-content-body {
+
+                display: block;
+
+                margin: 25px 0 0 15px;
+
+                padding-right: 10px;
+
+                overflow-y: auto;
+                overflow-x: hidden;
+
+                max-height: calc(100% - 320px);
+
+
+                // ----------------------------------------------
+                // SCROLLBAR
+                // ----------------------------------------------
+
+                &::-webkit-scrollbar {
+
+                    width: 6px;
+                    height: 6px;
+                }
+
+                &::-webkit-scrollbar-track {
+
+                    background: transparent;
+                }
+
+                &::-webkit-scrollbar-thumb {
+
+                    border-radius: 10px;
+
+                    background-color: #e2e3e5;
+                }
+
+
+                // ==================================================
+                // MATERIAL TREE
+                // ==================================================
+
+                .mat-tree {
+
+                    width: 100%;
+
+                    padding: 0;
+
+                    background: transparent;
+
+                    transition: opacity 0.2s linear;
+
+
+                    // ==================================================
+                    // TREE NODE
+                    // ==================================================
+
+                    .mat-node {
+
+                        display: flex;
+
+                        align-items: center;
+
+                        flex-direction: row;
+
+                        width: 100%;
+
+                        margin-bottom: 15px;
+
+                        cursor: pointer;
+
+                        font-size: $sidebar_items_fontSize;
+
+                        font-weight: $sidebar_items_fontWeight;
+
+                        letter-spacing: $sidebar_items_letterSpacing;
+
+                        color: $sidebar_items_fontColor;
+
+
+                        // ----------------------------------------------
+                        // TOGGLE BUTTON
+                        // ----------------------------------------------
+
+                        button {
+
+                            flex-shrink: 0;
+
+                            width: 40px;
+                            height: 40px;
+
+                            padding: 0;
+
+                            display: flex;
+
+                            justify-content: center;
+                            align-items: center;
+
+                            color: $sidebar_items_fontColor;
+
+                            background: transparent;
+
+                            border: none;
+
+                            cursor: pointer;
+
+
+                            &.tree-spacer {
+
+                                cursor: default;
+
+                                pointer-events: none;
+                            }
+
+
+                            mat-icon {
+
+                                width: 22px;
+                                height: 22px;
+
+                                font-size: 22px;
+
+                                transition: transform 0.2s ease;
+                            }
+                        }
+
+
+                        // ----------------------------------------------
+                        // NODE LINK
+                        // ----------------------------------------------
+
+                        .mat-node-link {
+
+                            position: relative;
+
+                            flex: 1;
+
+                            min-width: 0;
+
+                            padding: 8px 10px 8px 5px;
+
+                            cursor: pointer;
+
+                            transition:
+                                color 0.2s ease,
+                                font-weight 0.2s ease;
+
+
+                            // ------------------------------------------
+                            // UNDERLINE
+                            // ------------------------------------------
+
+                            .mat-node-underline {
+
+                                height: 1px;
+
+                                width: 0%;
+
+                                margin-top: 3px;
+
+                                background-color: #d5d5d5;
+
+                                transition: width 400ms ease;
+                            }
+
+
+                            // ------------------------------------------
+                            // HOVER
+                            // ------------------------------------------
+
+                            &:hover {
+
+                                color: black;
+
+                                font-weight: 500;
+
+                                .mat-node-underline {
+
+                                    width: 100%;
+                                }
+                            }
+
+
+                            // ------------------------------------------
+                            // ACTIVE ROUTE
+                            // ------------------------------------------
+
+                            &.mat-node-active {
+
+                                color: black;
+
+                                font-weight: 600;
+
+                                .mat-node-underline {
+
+                                    width: 100%;
+                                }
+                            }
+                        }
+
+
+                        // ----------------------------------------------
+                        // PARENT NODE
+                        // ----------------------------------------------
+
+                        &.mat-parent-node {
+
+                            .mat-node-link {
+
+                                font-weight: 500;
+                            }
+                        }
+                    }
+
+
+                    // ==================================================
+                    // CHILD NODE
+                    // ==================================================
+
+                    .mat-child-node {
+
+                        margin-bottom: 8px !important;
+                    }
+
+
+                    // ==================================================
+                    // NESTED TREE GROUP
+                    // ==================================================
+
+                    [role="group"] {
+
+                        margin-left: 20px;
+
+                        overflow: hidden;
+
+                        transition:
+                            max-height 0.25s ease,
+                            opacity 0.25s ease;
+                    }
+
+
+                    // ==================================================
+                    // INVISIBLE CHILDREN
+                    // ==================================================
+
+                    .menu-tree-invisible {
+
+                        display: none;
+                    }
+                }
+            }
+
+
+            // ==================================================
+            // CONTENT FOOTER
+            // ==================================================
+
+            .menu-content-footer {
+
+                display: flex;
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                position: absolute;
+
+                bottom: 10px;
+                left: 0;
+
+                height: 130px;
+                width: 100%;
+
+                border-top: 1px solid #b2cde073;
+
+
+                // ----------------------------------------------
+                // SETTINGS
+                // ----------------------------------------------
+
+                .menu-footer-settings {
+
+                    margin: 34px 0 0 20px;
+
+                    a {
+
+                        font-size: $sidebar_items_fontSize;
+
+                        letter-spacing: $sidebar_items_letterSpacing;
+
+                        color: $sidebar_items_fontColor;
+                    }
+                }
+
+
+                // ----------------------------------------------
+                // PROFILE
+                // ----------------------------------------------
+
+                .menu-footer-profile {
+
+                    display: flex;
+
+                    flex-direction: row;
+
+                    margin: 45px 0 0 20px;
+
+                    width: calc(100% - 20px);
+
+
+                    .footer-profile-details {
+
+                        height: 20px;
+
+                        width: 100%;
+
+                        font-size: $sidebar_items_fontSize;
+
+                        letter-spacing: $sidebar_items_letterSpacing;
+
+                        color: $sidebar_items_fontColor;
+                    }
+
+
+                    .footer-profile-btn {
+
+                        height: 20px;
+
+                        margin-left: 10px;
+
+
+                        .mat-icon-button {
+
+                            height: 20px;
+
+                            line-height: 20px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// ======================================================
+// SIDEBAR EXPANDED
+// ======================================================
+
+.app-sidebar-expended {
+    width: $expanded_sidebar_width + $toggled_sidebar_width;
+    .layout-menu {
+        .layout-menu-content {
+            width: $expanded_sidebar_width;
+        }
+    }
+}
+
+// ======================================================
+// TREE EXPAND ICON
+// ======================================================
+
+.mat-icon-expanded {
+
+    transform: rotate(180deg);
+}
+
+
+// ======================================================
+// RESPONSIVE
+// ======================================================
+
+@media (max-width: 768px) {
+
+    $mobile_sidebar_width: 50px;
+    $mobile_expanded_width: 220px;
+
+
+    .header-content {
+
+        width: $mobile_sidebar_width;
+
+
+        .layout-menu {
+
+            width: $mobile_sidebar_width;
+
+
+            .layout-menu-nav {
+
+                width: $mobile_sidebar_width;
+            }
+
+
+            .layout-menu-content {
+
+                left: $mobile_sidebar_width;
+            }
+        }
+    }
+
+
+    .app-sidebar-expended {
+
+        width: $mobile_sidebar_width + $mobile_expanded_width;
+
+
+        .layout-menu-content {
+
+            width: $mobile_expanded_width;
+        }
+    }
+}

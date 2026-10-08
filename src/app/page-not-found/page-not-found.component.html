@@ -1,0 +1,15 @@
+<div id="notfound">
+    <div *ngIf="!isForbiddenPage" class="notfound">
+        <div class="notfound-404" style="background-image: url('assets/img/icons/emoji.png');"></div>
+        <h1>404</h1>
+        <h2 >{{'PAGE_NOT_FOUND.NOT_FOUND.TITLE' | translate}}</h2>
+        <p>{{'PAGE_NOT_FOUND.NOT_FOUND.SUB_TITLE' | translate}}</p>
+        <a [routerLink]="['/main']">{{'PAGE_NOT_FOUND.NOT_FOUND.GO_HOME_BTN' | translate}}</a>
+    </div>
+    <div *ngIf="isForbiddenPage" class="notfound">
+        <div class="notfound-404" style="background-image: url('assets/img/icons/forbidden.png');"></div>
+        <h1>403</h1>
+        <h2 >{{'PAGE_NOT_FOUND.FORBIDDEN.TITLE' | translate}}</h2>
+        <p>{{'PAGE_NOT_FOUND.FORBIDDEN.SUB_TITLE' | translate}}</p>
+    </div>
+</div>

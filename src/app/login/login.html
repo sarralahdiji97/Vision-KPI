@@ -1,0 +1,313 @@
+<div class="login-page">
+
+  <!-- ================= LEFT SIDE ================= -->
+  <div class="login-left">
+
+    <div class="left-overlay"></div>
+
+    <div class="left-content">
+
+      <!-- Logo / titre -->
+    <div class="brand-title">
+
+    <div class="brand-name">
+       <div class="feature-icon">
+            <span class="material-icons">trending_up</span>
+          </div>
+      <span class="vision">VISION</span>
+      <span class="kpi">KPI</span>
+    </div>
+
+    <div class="brand-subtitle">
+      Production Performance Dashboard
+    </div>
+
+  </div>
+
+
+      <!-- Slogan -->
+    <!--  <div class="slogan">
+        Des données fiables pour<br>
+        une performance durable
+      </div>-->
+
+
+      <!-- KPI features -->
+     <!--<div class="features">
+
+        <div class="feature">
+          <div class="feature-icon">
+            <span class="material-icons">settings</span>
+          </div>
+
+          <div class="feature-title">
+            Efficience
+          </div>
+
+          <div class="feature-line"></div>
+        </div>
+
+
+        <div class="feature">
+          <div class="feature-icon">
+            <span class="material-icons">inventory_2</span>
+          </div>
+
+          <div class="feature-title">
+            Qté produite
+          </div>
+
+          <div class="feature-line"></div>
+        </div>
+
+
+        <div class="feature">
+          <div class="feature-icon">
+            <span class="material-icons">groups</span>
+          </div>
+
+          <div class="feature-title">
+            Présence
+          </div>
+
+          <div class="feature-line"></div>
+        </div>
+
+
+        <div class="feature">
+          <div class="feature-icon">
+            <span class="material-icons">query_stats</span>
+          </div>
+
+          <div class="feature-title">
+            Performance
+          </div>
+
+          <div class="feature-line"></div>
+        </div>
+
+      </div>-->
+
+    </div>
+
+
+    <!-- Bottom blue shape -->
+    <div class="bottom-shape"></div>
+
+  </div>
+
+
+  <!-- ================= RIGHT SIDE ================= -->
+  <div class="login-right">
+
+    <div class="login-container">
+
+      <!-- Header -->
+      <div class="login-header">
+
+        <h1>
+          Bienvenue
+        </h1>
+
+        <p>
+          Connectez-vous à votre espace<br>
+          Vision KPI
+        </p>
+
+      </div>
+
+
+      <!-- Login form -->
+       @if (!isFirstSignIn ) 
+       {
+        <form
+        class="login-form"
+        [formGroup]="loginForm"
+        (ngSubmit)="signIn()"
+      >
+
+        <!-- Username -->
+        <div class="input-container">
+
+          <span class="material-icons input-icon">
+            person_outline
+          </span>
+
+          <input
+            type="text"
+            formControlName="username"
+            placeholder="Nom d'utilisateur"
+            autocomplete="username"
+          >
+
+        </div>
+
+
+        <!-- Password -->
+        <div class="input-container">
+
+          <span class="material-icons input-icon">
+            lock_outline
+          </span>
+
+          <input
+          type="password"
+            formControlName="password"
+            placeholder="Mot de passe"
+            autocomplete="current-password"
+          >
+
+          <button
+            type="button"
+            class="password-toggle"
+          >
+
+          </button>
+
+        </div>
+
+
+        <!-- Login button -->
+        <button
+          type="submit"
+          class="login-button"
+          [disabled]="loginForm.invalid || isLoading"
+        >
+
+          <span class="material-icons">
+            login
+          </span>
+
+          <span>
+            Se connecter
+          </span>
+
+        </button>
+
+      </form>
+       }
+       @else {
+        <!--Register-->
+
+<form
+  class="login-form"
+  [formGroup]="registerForm"
+  (ngSubmit)="register()"
+>
+  <div class="login-title mt-2">Nouveau mot de passe</div>
+
+  <!-- Mot de passe -->
+  <div class="form-field">
+
+    <div class="input-container"
+         [class.input-error]="registerForm.get('password')?.invalid &&
+                              registerForm.get('password')?.touched">
+
+      <span class="material-icons input-icon">
+        lock_outline
+      </span>
+
+      <input
+        type="password"
+        formControlName="password"
+        placeholder="Mot de passe"
+        (keyup)="enableConfirmPassword()"
+      >
+
+    </div>
+
+    <mat-error
+      *ngIf="registerForm.get('password')?.touched &&
+             registerForm.get('password')?.hasError('required')"
+    >
+      Le mot de passe est obligatoire.
+    </mat-error>
+
+    <mat-error
+      *ngIf="registerForm.get('password')?.touched &&
+             registerForm.get('password')?.hasError('minlength')"
+    >
+      Minimum 6 caractères.
+    </mat-error>
+
+  </div>
+
+
+  <!-- Confirmation -->
+  <div class="form-field">
+
+    <div class="input-container"
+         [class.input-error]="registerForm.get('confirmPassword')?.invalid &&
+                              registerForm.get('confirmPassword')?.touched">
+
+      <span class="material-icons input-icon">
+        lock_outline
+      </span>
+
+      <input
+        type="password"
+        formControlName="confirmPassword"
+        placeholder="Confirmer mot de passe"
+        (keyup)="passwordConfirm($event)"
+      >
+
+    </div>
+
+    <mat-error
+      *ngIf="registerForm.get('confirmPassword')?.hasError('notConform') &&
+             registerForm.get('confirmPassword')?.hasError('required')"
+    >
+      La confirmation du mot de passe est obligatoire.
+    </mat-error>
+
+    <mat-error
+      *ngIf="registerForm.get('confirmPassword')?.touched &&
+             registerForm.get('confirmPassword')?.hasError('passwordMismatch')"
+    >
+      Les mots de passe ne correspondent pas.
+    </mat-error>
+
+  </div>
+
+
+  <!-- Bouton -->
+  <button
+    type="submit"
+    class="login-button"
+    [disabled]="!registerForm.valid || isLoading"
+  >
+    <span class="material-icons">login</span>
+
+    <span>Confirmer</span>
+  </button>
+
+</form>
+
+       }
+
+
+
+      <!-- Footer -->
+      <div class="login-footer">
+
+        <div class="footer-line"></div>
+
+        <div class="footer-icon">
+          <span class="material-icons">
+            factory
+          </span>
+        </div>
+
+        <div class="footer-line"></div>
+
+        <p>
+          Ensemble vers une production plus performante
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

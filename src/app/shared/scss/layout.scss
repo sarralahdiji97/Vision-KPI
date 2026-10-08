@@ -1,0 +1,367 @@
+
+@use "./layout/login";
+@use "./layout/page-not-found";
+@use "./layout/navbar";
+@use "./layout/error-dialog";
+@use "./layout/portal";
+@use "./layout/sidebar";
+@use "./layout/dashboard";
+
+.app-layout {
+  display: flex;
+  flex-direction: row;
+
+  width: 100%;
+  height: 100vh;
+
+  overflow: hidden;
+
+
+  // =====================================================
+  // SIDEBAR
+  // =====================================================
+
+  .app-sidebar {
+    height: 100vh;
+    width: auto;
+    flex-shrink: 0;
+  }
+
+
+  // =====================================================
+  // CONTENT
+  // =====================================================
+
+  .app-content {
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+
+
+    // ===================================================
+    // NAVBAR
+    // ===================================================
+
+    .content-header {
+      height: 72px;
+
+      flex-shrink: 0;
+
+      width: 100%;
+    }
+
+
+    // ===================================================
+    // PAGE CONTENT
+    // ===================================================
+
+    .content-body {
+      flex: 1;
+
+      min-width: 0;
+      min-height: 0;
+
+      width: 100%;
+
+      margin: 0;
+      padding: 10px;
+
+      box-sizing: border-box;
+
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+
+    // ===================================================
+    // FOOTER
+    // ===================================================
+
+    .footer {
+      flex-shrink: 0;
+
+      height: 45px;
+
+      box-sizing: border-box;
+
+      display: flex;
+
+      align-items: center;
+      justify-content: space-between;
+
+      padding: 0 55px;
+
+      border-top: 1px solid #e4ecf3;
+
+      background: #ffffff;
+
+      font-size: 12px;
+
+      color:  #087fd0;;
+    }
+  }
+}
+.app-dashboard {
+  height: calc(100% - 20px);
+  padding: 10px;
+  .card-border {
+    height: 100%;
+    padding: 0;
+    .body {
+      height: 100%;
+      width: calc(100% - 35px);
+      padding: 10px 15px;
+    }
+  }
+  .sidebar {
+    width: 15vw;
+    .sidebar-header {
+      height: 40px;
+      .mat-icon {
+        font-size: 30px;
+        font-weight: 900;
+        margin-right: 20px;
+      }
+      .title {
+        font-size: 1.18vw;
+        font-weight: 700;
+        font-style: italic;
+        background-color: transparent;
+      }
+    }
+  }
+  .app-container {
+    width: 85vw;
+    .breadcrumb {
+      height: 50px;
+    }
+    .content {
+      height: calc(100% - 65px);
+      overflow: hidden;
+    }
+  }
+}
+.ag-cell-value {
+  &:hover {
+    .picture-action-container {
+      transform: translatex(-20px) !important;
+    }
+  }
+}
+.picture-action-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transform: translatex(-112px);
+  transition: all 0.2s ease-out;
+}
+.picture-more-icon {
+  transform: translatex(120px);
+}
+
+.dashboard {
+  height: calc(100% - 47px);
+  .mat-form-field-appearance-outline {
+    .mat-form-field-wrapper {
+      padding-bottom: 0;
+    }
+  }
+  .table-grid {
+    height: calc(100% - 65px);
+  }
+}
+
+.stepper-disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: 0.5;
+
+}
+
+.custom-stepper {
+  height: 87%;
+  .mat-horizontal-stepper-wrapper {
+    height: 100%;
+    .mat-horizontal-content-container {
+      height: 100%;
+      //overflow: scroll;
+      .mat-horizontal-stepper-content {
+        height: 100%;
+      }
+    }
+  }
+}
+.mat-form-field {
+ font-size: 15px;
+}
+.mat-horizontal-stepper-content.mat-horizontal-stepper-content-inactive {
+  height: 0 !important;
+  overflow: hidden;
+}
+.mat-checkbox-checked.mat-accent .mat-checkbox-background {
+  background-color: #078b14;
+}
+
+.mat-mdc-snack-bar-container.snack-bar-success .mat-mdc-snackbar-surface {
+  background-color: #18901d !important;
+  color: white !important;
+}
+
+.mat-mdc-snack-bar-container.snack-bar-success .mat-mdc-snackbar-label {
+  color: white !important;
+}
+
+.mat-mdc-snack-bar-container.snack-bar-failed .mat-mdc-snackbar-surface {
+  background-color: #d32f2f !important;
+  color: white !important;
+}
+
+.mat-mdc-snack-bar-container.snack-bar-failed .mat-mdc-snackbar-label {
+  color: white !important;
+}
+
+.mat-mdc-snack-bar-container.snack-bar-failed mat-icon {
+  color: white !important;
+}
+
+.spinner-failed {
+  circle,
+  .mat-spinner circle {
+    stroke: #ff2a46 !important;
+  }
+}
+.spinner-success {
+  circle,
+  .mat-spinner circle {
+    stroke: #27ad06 !important;
+  }
+}
+
+.spinner-warning {
+  circle,
+  .mat-spinner circle {
+    stroke: #F7B727 !important;
+  }
+}
+
+// to disable scrollBar when Error-dialog is opned
+.cdk-global-scrollblock {
+  overflow-y: hidden;
+}
+
+.ag-cell-wrap-text {
+  white-space: normal;
+  word-break: break-word;
+  line-height: 1.7 !important;
+}
+
+.ag-root-wrapper {
+  border-radius: 6px;
+}
+
+.ag-ltr .ag-cell {
+  height: 100%;
+  border-right-width: 1px;
+}
+.cell-span {
+  border-right: 1px solid #dfdfdf !important;
+  padding: 0;
+}
+.cell-group {
+  height: 100%;
+  background-color: #f7f7f7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .text {
+    white-space: normal;
+    text-align: center;
+    line-height: 1.3;
+    font-weight: 600;
+  }
+}
+
+.w100 {
+  width: 100% !important;
+}
+
+.w70 {
+  width: 70% !important;
+}
+.w65 {
+  width: 65% !important;
+}
+
+.w50 {
+  width: 50% !important;
+}
+.w20 {
+  width: 23% !important;
+}
+.w30 {
+  width: 30% !important;
+}
+.w15 {
+  width: 15% !important;
+}
+
+.w10 {
+  width: 10% !important;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-moz-keyframes fadein {
+  /* Firefox */
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes fadein {
+  /* Safari and Chrome */
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-o-keyframes fadein {
+  /* Opera */
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media screen and (max-height: 800px) {
+        .quetion-dialog  {
+          max-height: 400px;
+          overflow-x: auto;
+        }
+}
+
+@media screen and (max-height: 800px) {
+  .mat-dialog-container  {
+    max-height: 400px !important;
+    overflow-x: auto !important;
+  }
+}

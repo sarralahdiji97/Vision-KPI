@@ -1,0 +1,196 @@
+<div class="dashboard">
+        <div class="filter-menu  mb-2">
+        <mat-radio-group [(ngModel)]="selectedIntervalType" (change)="onIntervalTypeChange($event)"
+            class="d-flex flex-row justify-content-between">
+
+            <div class="d-flex flex-row align-items-center" style="width: 130px;">
+                <app-multi-select [data]="mainProjectList" [bindLabelKey]="['name']" [value]="selectedMainProject"
+                    [multiple]="false" [label]="'Projet'" (selectionChange)="onMainProjectChange($event)"
+                    style="width: 100%;">
+                </app-multi-select>
+            </div>
+            <div class="d-flex flex-row align-items-center" >
+                <mat-radio-button [value]="interval.Day"></mat-radio-button>
+                <mat-form-field appearance="outline">
+                    <mat-label>Selection Par jour</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDay"
+                        (ngModelChange)="onPeriodChange($event,interval.Day)">
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+            </div>
+            <div class="d-flex flex-row align-items-center" >
+                <mat-radio-button [value]="interval.KW"></mat-radio-button>
+                <app-multi-select #SelectedSemaine [data]="kwPeriods" [bindLabelKey]="['name']" [value]="selectedWeek" [multiple]="false"
+                    [label]="'KW'" (selectionChange)="onPeriodChange($event,interval.KW)">
+                </app-multi-select>
+            </div>
+            <div class="d-flex flex-row align-items-center">
+                <mat-radio-button [value]="interval.Month"></mat-radio-button>
+                <app-multi-select #selectedMois [data]="monthPeriods" [bindLabelKey]="['name']" [value]="selectedMonth"
+                    [multiple]="false" [label]="'Mois'" (selectionChange)="onPeriodChange($event,interval.Month)">
+                </app-multi-select>
+            </div>
+            <div class="d-flex flex-row align-items-center" >
+                <mat-radio-button [value]="interval.Year"></mat-radio-button>
+                <app-multi-select #selectedAnnee [data]="yearPeriodsFiltred" [bindLabelKey]="['name']" [value]="selectedYear"
+                    [multiple]="false" [label]="'Anneé'" (selectionChange)="onPeriodChange($event,interval.Year)">
+                </app-multi-select>
+            </div>
+        </mat-radio-group>
+       </div>
+
+        <div class="info-note">
+          ℹ️ <strong>Note :</strong>
+           Pour consulter l’évolution de {{indicatorName}} par KW, double-clique sur une barre du graphique. 
+           Vous accéderez à un graphique détaillé présentant l’évolution MSPE, du secteur, de la ligne, ou de l'affectation sélectionné au fil des semaines.
+          </div>
+
+          <div class="chart-wrapper" style="margin-top: 20px;">
+              <div class="d-flex flex-wrap justify-content-between" style="height: 100%;">
+                <div  class="chart-container" style="width: 50%;">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                {{titleProj}}
+                            </div>
+                              @if (hasObjective) {
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                <span class="legend-square vert"></span>
+                                <span>Objectif atteint</span>
+                                </div>
+                                <div class="legend-item">
+                                <span class="legend-square jaune"></span>
+                                <span>Sous l'objectif</span>
+                                </div>
+                                <div class="legend-item">
+                                <span class="legend-line"></span>
+                                <span>Objectif MSPE</span>
+                                </div>
+                            </div>
+                           }
+                        </div>
+                    <apx-chart #efficiencyMSPEChart [series]="efficiencyMSPEChartOptions.series!" [chart]="efficiencyMSPEChartOptions.chart!"
+                      [yaxis]="efficiencyMSPEChartOptions.yaxis!" [xaxis]="efficiencyMSPEChartOptions.xaxis!"
+                      [title]="efficiencyMSPEChartOptions.title!" [dataLabels]="efficiencyMSPEChartOptions.dataLabels!" 
+                      [plotOptions]="efficiencyMSPEChartOptions.plotOptions!"  [legend]="efficiencyMSPEChartOptions.legend!"
+                      [markers]="efficiencyMSPEChartOptions.markers!" 
+                      [tooltip]="efficiencyMSPEChartOptions.tooltip!" 
+                      [colors]="efficiencyMSPEChartOptions.colors!"
+                      [grid]="efficiencyMSPEChartOptions.grid!"
+                      [annotations]="efficiencyMSPEChartOptions.annotations!"
+                      style="width: 100%; height: 100%;">
+                    </apx-chart> 
+                </div>
+                      <div  class="chart-container" style="width: 50%;">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                {{titleSect}}
+                            </div>
+                              @if (hasObjective) {
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                <span class="legend-square vert"></span>
+                                <span>Objectif atteint</span>
+                                </div>
+                                <div class="legend-item">
+                                <span class="legend-square jaune"></span>
+                                <span>Sous l'objectif</span>
+                                </div>
+                                <div class="legend-item">
+                                <span class="legend-line"></span>
+                                <span>Objectif de Secteur</span>
+                                </div>
+                            </div>
+                           }
+                        </div>
+                    <apx-chart #efficiencyOfSectChart [series]="efficiencyOfSectChartOptions.series!" [chart]="efficiencyOfSectChartOptions.chart!"
+                      [yaxis]="efficiencyOfSectChartOptions.yaxis!" [xaxis]="efficiencyOfSectChartOptions.xaxis!"
+                      [title]="efficiencyOfSectChartOptions.title!" [dataLabels]="efficiencyOfSectChartOptions.dataLabels!" 
+                      [plotOptions]="efficiencyOfSectChartOptions.plotOptions!"  [legend]="efficiencyOfSectChartOptions.legend!"
+                      [markers]="efficiencyOfSectChartOptions.markers!"
+                      [tooltip]="efficiencyOfSectChartOptions.tooltip!" 
+                      [colors]="efficiencyOfSectChartOptions.colors!"
+                      [grid]="efficiencyOfSectChartOptions.grid!"
+                      [annotations]="efficiencyOfSectChartOptions.annotations!"
+                      style="width: 100%; height: 100%;">
+                    </apx-chart> 
+                </div>
+                 <!-------------------Ligne Chart--------------------------------------->
+                   <div  class="chart-container" style="width: 100%;">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                {{titleLigne}}
+                            </div>
+                              @if (hasObjective) {
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                <span class="legend-square vert"></span>
+                                <span>Objectif atteint</span>
+                                </div>
+                                <div class="legend-item">
+                                <span class="legend-square jaune"></span>
+                                <span>Sous l'objectif</span>
+                                </div>
+                                <div class="legend-item">
+                                <span class="legend-line"></span>
+                                <span>Objectif de ligne</span>
+                                </div>
+                            </div>
+                        }
+                        </div>
+                    <apx-chart #efficiencyOfLineChart [series]="efficiencyOfLineChartOptions.series!" [chart]="efficiencyOfLineChartOptions.chart!"
+                      [yaxis]="efficiencyOfLineChartOptions.yaxis!" [xaxis]="efficiencyOfLineChartOptions.xaxis!"
+                      [title]="efficiencyOfLineChartOptions.title!" [dataLabels]="efficiencyOfLineChartOptions.dataLabels!" 
+                      [plotOptions]="efficiencyOfLineChartOptions.plotOptions!"  [legend]="efficiencyOfLineChartOptions.legend!"
+                      [markers]="efficiencyOfLineChartOptions.markers!" [tooltip]="efficiencyOfLineChartOptions.tooltip!"
+                      [colors]="efficiencyOfLineChartOptions.colors!"
+                      [grid]="efficiencyOfLineChartOptions.grid!"
+                      [annotations]="efficiencyOfLineChartOptions.annotations!"
+                      style="width: 100%; height: 100%;">
+                    </apx-chart> 
+                </div>
+                <!-------------------Affectation Chart--------------------------------------->
+                  <div class="chart-container" style="width: 100%;">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                {{titleAff}}
+                            </div>
+                            @if (hasObjective) {
+                             <div class="chart-legend">
+                                <div class="legend-item">
+                                <span class="legend-square vert"></span>
+                                <span>Objectif atteint</span>
+                                </div>
+                                <div class="legend-item">
+                                <span class="legend-square jaune"></span>
+                                <span>Sous l'objectif</span>
+                                </div>
+                                <div class="legend-item">
+                                <span class="legend-line"></span>
+                                <span>Objectif de l'affectation</span>
+                                </div>
+                            </div>
+                            }           
+                        </div>
+                        <apx-chart #efficiencyOfAffectChart 
+                        [series]="efficiencyOfAffectChartOptions.series!"
+                        [chart]="efficiencyOfAffectChartOptions.chart!"
+                        [yaxis]="efficiencyOfAffectChartOptions.yaxis!" 
+                        [xaxis]="efficiencyOfAffectChartOptions.xaxis!"
+                        [title]="efficiencyOfAffectChartOptions.title!" 
+                        [dataLabels]="efficiencyOfAffectChartOptions.dataLabels!" 
+                        [plotOptions]="efficiencyOfAffectChartOptions.plotOptions!"  
+                        [legend]="efficiencyOfAffectChartOptions.legend!"
+                        [markers]="efficiencyOfAffectChartOptions.markers!" 
+                        [tooltip]="efficiencyOfAffectChartOptions.tooltip!"
+                        [colors]="efficiencyOfAffectChartOptions.colors!"
+                        [grid]="efficiencyOfAffectChartOptions.grid!"
+                        [annotations]="efficiencyOfAffectChartOptions.annotations!"
+                        style="width: 100%; height: 100%;">
+                        </apx-chart> 
+
+                </div>
+              </div>
+            </div>
+</div>

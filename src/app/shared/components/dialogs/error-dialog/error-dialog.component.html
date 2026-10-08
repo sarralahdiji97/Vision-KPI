@@ -1,0 +1,15 @@
+<div class="error-dialog">
+    <div class="header d-flex flex-column align-items-center">
+        <img src="assets/img/error-dialog-img.png" alt="">
+        <h1 *ngIf="statusCode != 200" class="mt-1">{{statusCode}} !!!</h1>
+    </div>
+    <div class="body mt-1">
+        <p>{{message}}</p>
+    </div>
+    <div class="footer d-flex flex-row-reverse">
+        <button mat-raised-button (click)="close()">
+            <mat-icon>close</mat-icon>
+            Fermer
+        </button>
+    </div>
+</div>

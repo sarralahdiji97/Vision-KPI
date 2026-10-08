@@ -1,0 +1,27 @@
+@use '@angular/material' as mat;
+
+@include mat.elevation-classes();
+@include mat.app-background();
+
+$default-font-size : 0.93vw;
+$default-letter-spacing : 1px;
+// Font
+@font-face {
+  font-family: "Syne";
+  src: url(../../../../assets/fonts/Syne-VariableFont_wght.ttf);
+}
+
+// ✅ Nouveau système (Material 3)
+$theme: mat.define-theme((
+  color: (
+    primary: mat.$azure-palette,
+  ),
+  typography: (
+    brand-family: 'Syne, sans-serif',
+    plain-family: 'Syne, sans-serif',
+  )
+));
+
+:root {
+  @include mat.all-component-themes($theme);
+}

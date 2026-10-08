@@ -1,0 +1,114 @@
+<div class="dashboard-details">
+        <div class="filter-menu  mb-2">
+            <app-multi-select #selectedAnnee  [data]="yearPeriodsFiltred" [bindLabelKey]="['name']" [value]="selectedYear"
+                    [multiple]="false" [label]="'Année'" (selectionChange)="onPeriodChange($event)">
+                </app-multi-select>
+        </div>
+             <div class="export-menu d-flex justify-content-between ">
+           <!---<button mat-button (click)="exportToExcel()">                                                      
+                  <div class="d-flex align-items-center">
+                        <img src="assets/img/icons/excel-file.png" width="25px" />
+                  <span class="text ml-1">Vers Excel</span>
+                  </div>
+              
+              </button>-->
+                <button mat-raised-button  (click)="back()">
+             <mat-icon>keyboard_arrow_left</mat-icon>
+             Retour
+           </button>
+          </div>
+
+          <div class="kpi-row">
+            <!-- Efficience totale -->
+            <div class="kpi-card" [class.ok]="atteint" [class.ko]="!atteint">
+                <div class="kpi-head">
+                <span class="kpi-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/>
+                    </svg>
+                </span>
+                <span class="kpi-label">{{titleToal}} totale</span>
+                </div>
+                <div class="kpi-value">{{ totalEff | number:'1.2-2' }}<small>{{unit}}</small></div>
+
+                <div class="kpi-bar">
+                <div class="kpi-fill" [style.width.%]="totalEff > 100 ? 100 : totalEff"></div>
+                <div class="kpi-target" [style.left.%]="totalObj > 100 ? 100 : totalObj"></div>
+                </div>
+            </div>
+
+            <!-- Objectif -->
+             @if (hasObjective) {
+            <div class="kpi-card neutral">
+                <div class="kpi-head">
+                <span class="kpi-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>
+                    </svg>
+                </span>
+                <span class="kpi-label">Objectif de la période</span>
+                </div>
+                <div class="kpi-value">{{ totalObj | number:'1.2-2' }}<small>{{unit}}</small></div>
+                <div class="kpi-sub">Moyenne des objectifs par KW</div>
+            </div>
+          }
+            <!-- Écart -->
+          @if (hasObjective) {
+            <div class="kpi-card" [class.ok]="atteint" [class.ko]="!atteint">
+                <div class="kpi-head">
+                <span class="kpi-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M5 12h14"/><path d="M13 6l6 6-6 6"/>
+                    </svg>
+                </span>
+                <span class="kpi-label">Écart vs objectif</span>
+                </div>
+                <div class="kpi-value">
+                {{ ecart > 0 ? '+' : '' }}{{ ecart | number:'1.2-2' }}
+                </div>
+                <span class="kpi-badge">
+                {{ atteint ? 'Objectif atteint' : "Sous l'objectif" }}
+                </span>
+            </div>
+        }
+
+            </div>
+      <div class="chart-wrapper" style="margin-top: 20px;">
+              <div class="d-flex flex-wrap justify-content-between" style="height: 100%;">
+                 <div style="width: 100%;">
+                        <div class="chart-header">
+                            <div class="chart-title">
+                                {{titleChart}}
+                            </div>
+                              @if (hasObjective) {
+                            <div class="chart-legend">
+                                <div class="legend-item">
+                                <span class="legend-square vert"></span>
+                                <span>Objectif atteint</span>
+                                </div>
+                                <div class="legend-item">
+                                <span class="legend-square jaune"></span>
+                                <span>Sous l'objectif</span>
+                                </div>
+                                <div class="legend-item">
+                                <span class="legend-line"></span>
+                                <span>Objectif </span>
+                                </div>
+                            </div>
+                           }
+                        </div>
+                    <apx-chart #detailsChart [series]="detailsChartOptions.series!" [chart]="detailsChartOptions.chart!"
+                      [yaxis]="detailsChartOptions.yaxis!" [xaxis]="detailsChartOptions.xaxis!"
+                      [title]="detailsChartOptions.title!" [dataLabels]="detailsChartOptions.dataLabels!" 
+                      [plotOptions]="detailsChartOptions.plotOptions!"  [legend]="detailsChartOptions.legend!"
+                      [markers]="detailsChartOptions.markers!" [tooltip]="detailsChartOptions.tooltip!"
+                      [colors]="detailsChartOptions.colors!"
+                      [grid]="detailsChartOptions.grid!"
+                      [annotations]="detailsChartOptions.annotations!" style="width: 100%; height: 100%;">
+                    </apx-chart> 
+                </div>
+            </div>
+        </div>
+
+</div>
+

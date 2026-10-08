@@ -1,1 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
+@use '@angular/material' as mat;
+/* Material-icons */
+//@use "material-icons/iconfont/material-icons.css";
+@use "./app/shared/scss/core.scss";
+@use "./app/shared/scss/layout.scss";
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
+  padding: 0;
+
+  overflow: hidden;
+}
+* {
+  box-sizing: border-box;
+}
+mat-form-field {
+  --mat-form-field-container-height: 42px;
+  --mat-form-field-container-vertical-padding: 8px;
+}
+ngx-spinner,
+.ngx-spinner-overlay {
+  pointer-events: none !important;
+}
+
+.ngx-spinner-overlay.fade-out {
+  pointer-events: none !important;
+}

@@ -1,0 +1,42 @@
+ <header class="navbar">
+
+    <div class="brand-navbar">
+      <div class="brand-icon">
+        <mat-icon>trending_up</mat-icon>
+      </div>
+
+      <div class="brand-content">
+        <div class="brand-name">
+          VISION <span>KPI</span>
+        </div>
+
+        <div class="brand-subtitle">
+          Production Performance Dashboard
+        </div>
+      </div>
+    </div>
+
+    <div class="header-content-right">
+
+       <div class="profile d-flex flex-row align-items-center">
+            <div class="user-avatar" [matMenuTriggerFor]="menu"
+                [ngStyle]="{'background-image': setImgUrl(false,profile && profile.photo)}">
+            </div>
+            <div class="user-detail">
+                <div class="user-fullname">{{(profile$ | async)?.name}}</div>
+                <div class="user-role">
+                    {{(profile$ | async)?.service}} || Niveau {{(profile$ |
+                    async)?.level}}
+                </div>
+            </div>
+            <mat-menu class="mt-1" #menu="matMenu">
+                <button style="width: 220px;" mat-menu-item (click)="logOut()">
+                    <mat-icon>logout</mat-icon>
+                    <span>Déconnexion</span>
+                </button>
+            </mat-menu>
+        </div>
+
+    </div>
+
+  </header>

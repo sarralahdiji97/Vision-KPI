@@ -1,0 +1,12 @@
+{
+  "/Data": {
+    //"target": "http://srvwb01:8666/Data/",
+    "target": "http://srvdb01:8666/Data/",
+    "secure": false,
+    "logLevel": "debug",
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/Data": ""
+    }
+  }
+}

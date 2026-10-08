@@ -1,0 +1,38 @@
+.picture {
+    width: 350px;
+    height: 280px;
+    /* padding: 10px; */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    /* margin-left: 40px !important;*/
+    .picture-cover {
+        background-size: 100% 100% !important;
+    }
+    .picture-container {
+        width: 250px;
+        height: 250px;
+        background-color: #e5e5e5;
+        border-radius: 20px;
+        margin-top: 30px;
+        background-size: 60%;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        .picture-action-btn {
+            visibility: hidden;
+            width: 0%;
+            height: 100%;
+            backdrop-filter: blur(5px);
+            transition: all 200ms linear;
+        }
+        &:hover {
+            .picture-action-btn {
+                width: 100%;
+                visibility: visible;
+            }
+        }
+    }
+}

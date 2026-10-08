@@ -1,0 +1,27 @@
+<mat-form-field class="custom-form-field no-padding w100 mr-1" appearance="outline">
+    <mat-label>{{ label}}</mat-label>
+    <mat-select class="custom-select" [formControl]="formControl" [multiple]="multiple" [required]="required"
+        (selectionChange)="selectionChange.next($event)">
+        <div style="background-color: whitesmoke;"
+            class="search-container d-flex justify-content-center align-items-center">
+            <mat-icon style="color: #585858;">search</mat-icon>
+            <input placeholder="Search..." matInput type="text" (keyup)="onKey($event)" (keydown)="handleInput($event)"
+                style="margin: 7px;width: 72%;height: 30px;border: 1px solid #b5b5b5;background-color: white;padding: 0px 5px;border-radius: 5px;">
+        </div>
+        <div style="overflow: auto;max-height: 200px;">
+            <div *ngIf=" filteredItems && filteredItems.length>0">
+                <mat-option *ngFor="let item of filteredItems" [value]="bindValueKey ? item[bindValueKey] : item">
+                    <div style="width: 200px;">
+                        {{ generateLabel(item) }}
+                    </div>
+                </mat-option>
+            </div>
+            <div *ngIf=" filteredItems && filteredItems.length === 0" style="margin: 15px;">
+                <mat-option>Liste vide</mat-option>
+            </div>
+        </div>
+    </mat-select>
+    <mat-error *ngIf="formControl?.errors">
+        *ne doit pas être vide.
+    </mat-error>
+</mat-form-field>

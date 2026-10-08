@@ -1,0 +1,23 @@
+.app-breadcrumb {
+    height: 50px;
+    width: 100%;
+    .breadcrumb-container {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        .breadcrumb-item {
+            display: flex;
+            align-content: center;
+            .link,
+            .separator {
+                font-size: 18px;
+                color: #565656;
+            }
+            .separator {
+                margin-left: 10px;
+                margin-right: 5px;
+            }
+        }
+    }
+}

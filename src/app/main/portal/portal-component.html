@@ -1,0 +1,115 @@
+<div class="portal-page">
+
+  <!-- HEADER -->
+    <div class="content-header">
+      <app-navbar></app-navbar>
+    </div>
+
+
+  <!-- MAIN CONTENT -->
+  <main class="portal-content">
+
+    <!-- INTRO -->
+    <section class="portal-intro">
+
+  <div class="intro-content">
+
+    <h1>
+      Choisissez votre module
+    </h1>
+
+    <p>
+      Accédez rapidement aux différents espaces de gestion
+      et de pilotage de votre entreprise.
+    </p>
+  </div>
+
+  <div class="intro-icon">
+    <mat-icon>dashboard</mat-icon>
+  </div>
+
+</section>
+
+
+      <!-- MODULES -->
+    <section class="modules-grid">
+
+      <div
+        *ngFor="let module of ModulesList"
+        class="module-card"
+        [class.production]="module.code === ModuleProd"
+        [class.disabled]="module.disabled"
+        [routerLink]="module.disabled ? null : module.routerLink">
+
+        <!-- TOP -->
+        <div class="module-top">
+
+          <div class="module-icon">
+            <mat-icon>
+              {{ module.icon }}
+            </mat-icon>
+          </div>
+
+          <mat-icon class="arrow">
+            arrow_forward
+          </mat-icon>
+
+        </div>
+
+
+        <!-- CONTENT -->
+        <div class="module-content">
+
+          <h2>
+            {{ module.name }}
+          </h2>
+
+          <p>
+            {{ module.content }}
+          </p>
+
+        </div>
+
+
+        <!-- FOOTER -->
+        <div class="module-footer">
+
+          <span *ngIf="!module.disabled">
+            Accéder au module
+          </span>
+
+          <span *ngIf="module.disabled">
+            Bientôt disponible
+          </span>
+
+          <mat-icon *ngIf="!module.disabled">
+            north_east
+          </mat-icon>
+
+          <mat-icon *ngIf="module.disabled">
+            lock
+          </mat-icon>
+
+        </div>
+
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <!-- FOOTER -->
+  <footer class="portal-footer">
+
+    <span>
+      © 2026 Vision KPI
+    </span>
+
+    <span>
+     Version {{version}}
+    </span>
+
+  </footer>
+
+</div>

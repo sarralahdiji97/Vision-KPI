@@ -1,0 +1,228 @@
+.dashboard-details {
+    height: 100%;
+    padding: 20px;
+    .filter-menu {
+        height: 45px;
+        width: 20%;
+    }
+    $green: #4f9f4a;
+$orange: #e0a93b;
+$red: #d64545;
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 16px 0 8px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.kpi-card {
+  --accent: #6b7280;
+  position: relative;
+  padding: 16px 20px;
+  background: #fff;
+  border: 1px solid #eceef2;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(16, 24, 40, 0.05);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  // fine bande colorée à gauche
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: var(--accent);
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 24, 40, 0.09);
+  }
+
+  &.ok { --accent: #{$green}; }
+  &.ko { --accent: #{$orange}; }
+  &.neutral { --accent: #{$red}; }
+}
+
+.kpi-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #6b7280;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+.kpi-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, white);
+}
+
+.kpi-value {
+  margin-top: 10px;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  color: #111827;
+
+  small {
+    margin-left: 3px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #9ca3af;
+  }
+}
+
+.kpi-sub {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+// Barre de progression + repère d'objectif
+.kpi-bar {
+  position: relative;
+  height: 8px;
+  margin-top: 14px;
+  border-radius: 999px;
+  background: #eef0f4;
+}
+
+.kpi-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: width 0.6s ease;
+}
+
+.kpi-target {
+  position: absolute;
+  top: -4px;
+  width: 3px;
+  height: 16px;
+  border-radius: 2px;
+  background: $red;
+  transform: translateX(-50%);
+}
+
+.kpi-badge {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, white);
+}
+    .chart-wrapper {
+        height: calc(100% - 125px);
+        overflow-y: auto;
+        overflow-x: hidden;
+            .chart-header {
+                padding: 10px 0 0 0;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            .chart-title {
+                font-size: 20px;
+                font-weight: 600;
+                color: #111;
+                margin-bottom: 14px;
+                }
+
+                .chart-legend {
+                display: flex;
+                align-items: center;
+                gap: 35px;
+                margin-bottom: 10px;
+                color: #555;
+                font-size: 16px;
+                .legend-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    .legend-square {
+                        width: 23px;
+                        height: 23px;
+                        border-radius: 4px;
+                        display: inline-block;
+                        }
+
+                        .legend-square.vert {
+                        background: #16A34A;
+                        }
+
+                        .legend-square.jaune {
+                        background: #F59E0B;
+                        }
+
+                        .legend-line {
+                        width: 34px;
+                        height: 5px;
+                        background: #ee3d3d;
+                        display: inline-block;
+                        }
+                    }
+                }
+            }
+    }
+}
+::ng-deep .apexcharts-data-labels text {
+    transform-box: fill-box;
+    transform-origin: center;
+    transform: rotate(-90deg);
+    color: #111;
+}
+::ng-deep .apexcharts-tooltip {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+ ::ng-deep .apexcharts-tooltip-custom {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+            padding: 10px 12px;
+            min-width: 150px;
+            font-size: 13px;
+             .tooltip-title {
+            font-weight: 600;
+            color: #374151;
+            padding-bottom: 7px;
+            margin-bottom: 7px;
+            border-bottom: 1px solid #eeeeee;
+            }
+
+            .tooltip-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            padding: 3px 0;
+             .tooltip-label {
+               color: #6b7280;
+             }
+
+            .tooltip-value {
+              font-weight: 600;
+              color: #374151;
+            }
+         }
+     }
