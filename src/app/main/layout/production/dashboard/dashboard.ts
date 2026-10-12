@@ -81,11 +81,15 @@ export class Dashboard {
   public effOfLineData:DataChartDetail[]=[];
   public effOfSectData:DataChartDetail[]=[];
   public effMSPEData:DataChartDetail[]=[];
- private lastClickTime = 0;
- public hasObjective!:boolean;
- public objectiveMarkers: ObjectiveMarker[] = [];
- public indicatorName!:string;
-
+  private lastClickTime = 0;
+  public hasObjective!:boolean;
+  public objectiveMarkers: ObjectiveMarker[] = [];
+  public indicatorName!:string;
+  private readonly STOP_COLORS = [
+    '#4f6bd0', '#F59E0B', '#16A34A', '#c0504d',
+    '#8e6bbf', '#6b7280', '#d9779f', '#5aa6d6',
+  ];
+  private causeColorMap = new Map<string, string>();
  constructor(  
   private activatedRoute: ActivatedRoute,
   private dashboardService: DashboardService,
@@ -139,7 +143,7 @@ fill: {
         horizontal: false,
       columnWidth: '55%',
       borderRadius: 4,
-      distributed:true,
+     // distributed:true,
         dataLabels: {
     position:'top'
   },
@@ -223,7 +227,7 @@ fill: {
         horizontal: false,
       columnWidth: '55%',
       borderRadius: 4,
-      distributed:true,
+     // distributed:true,
         dataLabels: {
     position:'top'
   },
@@ -301,7 +305,7 @@ fill: {
         horizontal: false,
       columnWidth: '55%',
       borderRadius: 4,
-      distributed:true,
+      //distributed:true,
         dataLabels: {
     position:'top'
   },
@@ -379,7 +383,7 @@ fill: {
         horizontal: false,
       columnWidth: '55%',
       borderRadius: 4,
-      distributed:true,
+     // distributed:true,
         dataLabels: {
     position:'top'
   },
@@ -513,6 +517,163 @@ legend: {
         );
   }
 
+private getCauseColor(cause: string): string {
+  if (!this.causeColorMap.has(cause)) {
+    const color = this.STOP_COLORS[this.causeColorMap.size % this.STOP_COLORS.length];
+    this.causeColorMap.set(cause, color);
+  }
+  return this.causeColorMap.get(cause)!;
+}
+
+private buildStopChartOptions(
+  base: any,
+  data: DataChartDetail[]
+): ChartOptions {
+
+  if (!data?.length) {
+    return { ...base, series: [], annotations: { points: [] } };
+  }
+
+  const names = data.map(d => d.name);
+
+  // Total de chaque barre : value si fourni, sinon somme des durées
+  const totals = data.map(d =>
+    d.value ?? (d.details ?? []).reduce((s, x) => s + (x.duration ?? 0), 0)
+  );
+
+  // Causes uniques, triées par durée totale décroissante
+  const totalByCause = new Map<string, number>();
+  data.forEach(d =>
+    (d.details ?? []).forEach(x =>
+      totalByCause.set((x.cause ?? ''), (totalByCause.get(x.cause ?? '') ?? 0) + (x.duration ?? 0))
+    )
+  );
+  const causes = [...totalByCause.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([cause]) => cause);
+
+  // Une série par cause, une valeur par barre (0 si absente)
+  const series = causes.map(cause => ({
+    name: cause,
+    type: 'bar' as const,
+    data: data.map(d =>
+      (d.details ?? [])
+        .filter(x => x.cause === cause)
+        .reduce((s, x) => s + (x.duration ?? 0), 0)
+    ),
+  }));
+
+  // Échelle Y avec marge pour le total affiché au-dessus
+  const maxTotal = Math.max(...totals, 0);
+  const step = maxTotal > 5000 ? 1000 : maxTotal > 1000 ? 500 : 100;
+  const yMax = Math.max(Math.ceil((maxTotal * 1.15) / step) * step, step);
+  const labelThreshold = yMax * 0.04; // masque les valeurs des segments trop fins
+
+  // Total au-dessus de chaque barre
+  const totalLabels: any[] = data.map((d, i) => ({
+    x: d.name,
+    y: totals[i],
+    marker: { size: 0, strokeWidth: 0, fillColor: 'transparent', strokeColor: 'transparent' },
+    label: {
+      text: `${totals[i]}`,
+      offsetY: -4,
+      borderWidth: 0,
+      style: { background: 'transparent', color: '#222', fontSize: '14px', fontWeight: 600 },
+    },
+  }));
+
+  return {
+    ...base,
+
+    chart: {
+      ...base.chart,
+      type: 'bar',
+      stacked: true,
+    },
+
+    series,
+    colors: causes.map(c => this.getCauseColor(c)),
+
+    plotOptions: {
+      ...base.plotOptions,
+      bar: {
+        ...base.plotOptions?.bar,
+        distributed: false,   // ← ici, uniquement pour temps d'arrêt
+        columnWidth: '45%',
+        borderRadius: 4,
+        borderRadiusApplication: 'end',
+        borderRadiusWhenStacked: 'last',
+      },
+    },
+
+    dataLabels: {
+      enabled: true,
+      offsetY: 0,
+      formatter: (v: number) => (v > labelThreshold ? `${v}` : ''),
+      style: { fontSize: '12px', fontWeight: 600, colors: ['#ffffff'] },
+      background: { enabled: false },
+    },
+
+    annotations: { points: totalLabels },
+
+    xaxis: {
+      ...base.xaxis,
+      categories: names,
+    },
+
+    yaxis: {
+      ...base.yaxis,
+      min: 0,
+      max: yMax,
+      labels: { formatter: (v: number) => `${Math.round(v)}` },
+    },
+
+    legend: {
+      ...base.legend,
+      show: true,
+      position: 'top',
+      horizontalAlign: 'center',
+      markers: { size: 6 },
+    },
+
+  tooltip: {
+  enabled: true,
+  custom: ({ seriesIndex, dataPointIndex, w }: any) => {
+    const item = data[dataPointIndex];
+    const cause = w.globals.seriesNames[seriesIndex];
+    const detail = item?.details?.find(x => x.cause === cause);
+
+    if (!item || !detail) {
+      return '';
+    }
+
+    const color = detail.causeType === 'Externe' ? '#c0504d' : '#2ca58d';
+
+    return `
+      <div style="
+        width: 260px;
+        padding: 10px 14px;
+        white-space: normal;
+        word-break: break-word;
+        overflow-wrap: anywhere;
+        box-sizing: border-box;
+        line-height: 1.4;
+      ">
+        <div style="font-weight:600; margin-bottom:6px">
+          ${item.name} - ${detail.cause}
+        </div>
+        <div style="margin-bottom:6px">${detail.label}</div>
+        <div style="color:#777">Service : ${detail.service}</div>
+        <div style="color:#777">Durée : ${detail.duration} min</div>
+        <div style="margin-top:6px; font-weight:600; color:${color}">
+          ${detail.causeType}
+        </div>
+      </div>`;
+  },
+},
+  };
+}
+
     private loadData(
     startDate: string,
     endDate: string,
@@ -595,7 +756,22 @@ legend: {
           this.efficiencyOfAffectChartOptions = {
 
             ...this.efficiencyOfAffectChartOptions,
-
+                chart: {
+                  ...this.efficiencyOfAffectChartOptions.chart,
+                  stacked: false,                       // ← reset
+                },
+                plotOptions: {
+                  ...this.efficiencyOfAffectChartOptions.plotOptions,
+                  bar: {
+                    ...this.efficiencyOfAffectChartOptions.plotOptions?.bar,
+                    distributed: true,                  // ← reset
+                    borderRadiusWhenStacked: undefined,
+                  },
+                },
+                  legend: {
+                  ...this.efficiencyOfAffectChartOptions.legend,
+                  show: false,                          // ← reset (pas de légende de causes)
+                },
               xaxis: {
                 ...this.efficiencyOfAffectChartOptions.xaxis,
                categories: categories,
@@ -660,6 +836,7 @@ legend: {
                 `;
                }
                },
+               
               colors: barColors,
               dataLabels: {
                 enabled: false
@@ -770,7 +947,22 @@ legend: {
             const yMaxLine = Math.ceil((maxDataLine * 1.1) / 10) * 10; // +10 % arrondi à la dizaine
             this.efficiencyOfLineChartOptions = {
                 ...this.efficiencyOfLineChartOptions,
-
+                chart: {
+                  ...this.efficiencyOfLineChartOptions.chart,
+                  stacked: false,                       // ← reset
+                },
+                plotOptions: {
+                  ...this.efficiencyOfLineChartOptions.plotOptions,
+                  bar: {
+                    ...this.efficiencyOfLineChartOptions.plotOptions?.bar,
+                    distributed: true,                  // ← reset
+                    borderRadiusWhenStacked: undefined,
+                  },
+                },
+                  legend: {
+                  ...this.efficiencyOfLineChartOptions.legend,
+                  show: false,                          // ← reset (pas de légende de causes)
+                },
                xaxis: {
                 ...this.efficiencyOfLineChartOptions.xaxis,
                categories: categoriesLine,
@@ -947,7 +1139,22 @@ legend: {
             const yMaxSect = Math.ceil((maxDataSect * 1.1) / 10) * 10; // +10 % arrondi à la dizaine
             this.efficiencyOfSectChartOptions = {
                 ...this.efficiencyOfSectChartOptions,
-
+               chart: {
+                  ...this.efficiencyOfSectChartOptions.chart,
+                  stacked: false,                       // ← reset
+                },
+                plotOptions: {
+                  ...this.efficiencyOfSectChartOptions.plotOptions,
+                  bar: {
+                    ...this.efficiencyOfSectChartOptions.plotOptions?.bar,
+                    distributed: true,                  // ← reset
+                    borderRadiusWhenStacked: undefined,
+                  },
+                },
+                  legend: {
+                  ...this.efficiencyOfSectChartOptions.legend,
+                  show: false,                          // ← reset (pas de légende de causes)
+                },
                 xaxis: {
                   categories: categoriesSect
                 },
@@ -1123,7 +1330,22 @@ legend: {
             const yMax = Math.ceil((maxData * 1.1) / 10) * 10; // +10 % arrondi à la dizaine
             this.efficiencyMSPEChartOptions = {
                 ...this.efficiencyMSPEChartOptions,
-
+                chart: {
+                  ...this.efficiencyMSPEChartOptions.chart,
+                  stacked: false,                       // ← reset
+                },
+                plotOptions: {
+                  ...this.efficiencyMSPEChartOptions.plotOptions,
+                  bar: {
+                    ...this.efficiencyMSPEChartOptions.plotOptions?.bar,
+                    distributed: true,                  // ← reset
+                    borderRadiusWhenStacked: undefined,
+                  },
+                },
+                  legend: {
+                  ...this.efficiencyMSPEChartOptions.legend,
+                  show: false,                          // ← reset (pas de légende de causes)
+                },
                 xaxis: {
                   categories: categoriesProj
                 },
@@ -1239,7 +1461,38 @@ legend: {
                   }
                 ],
               };
-            this.cdr.detectChanges();
+
+
+           // ----------------- Traitement spécifique au Temps d'arrêt -------------------------------------------
+
+          if (this.overviewName === OverviewName.Temps_Arret) {
+
+            this.efficiencyOfAffectChartOptions =
+              this.buildStopChartOptions(
+                this.efficiencyOfAffectChartOptions,
+                this.effOfAffectData
+              );
+
+            this.efficiencyOfLineChartOptions =
+              this.buildStopChartOptions(
+                this.efficiencyOfLineChartOptions,
+                this.effOfLineData
+              );
+
+            this.efficiencyOfSectChartOptions =
+              this.buildStopChartOptions(
+                this.efficiencyOfSectChartOptions,
+                this.effOfSectData
+              );
+
+            this.efficiencyMSPEChartOptions =
+              this.buildStopChartOptions(
+                this.efficiencyMSPEChartOptions,
+                this.effMSPEData
+              );
+          }
+
+          this.cdr.detectChanges();
 
     })
 

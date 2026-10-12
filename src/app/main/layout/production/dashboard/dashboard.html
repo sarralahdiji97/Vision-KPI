@@ -1,5 +1,5 @@
 <div class="dashboard">
-        <div class="filter-menu  mb-2">
+        <div class="filter-menu">
         <mat-radio-group [(ngModel)]="selectedIntervalType" (change)="onIntervalTypeChange($event)"
             class="d-flex flex-row justify-content-between">
 
@@ -42,7 +42,7 @@
 
         <div class="info-note">
           ℹ️ <strong>Note :</strong>
-           Pour consulter l’évolution de {{indicatorName}} par KW, double-clique sur une barre du graphique. 
+           Pour consulter l’évolution de {{indicatorName}} par KW ou par Mois, double-clique sur une barre du graphique. 
            Vous accéderez à un graphique détaillé présentant l’évolution MSPE, du secteur, de la ligne, ou de l'affectation sélectionné au fil des semaines.
           </div>
 

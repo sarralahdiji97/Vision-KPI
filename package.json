@@ -38,6 +38,7 @@
     "ag-grid-angular": "^36.2.0",
     "ag-grid-community": "^36.2.0",
     "apexcharts": "^7.6.1",
+    "material-icons": "^1.13.14",
     "moment": "^2.31.0",
     "ng-apexcharts": "^3.1.0",
     "ngx-spinner": "^22.0.1",

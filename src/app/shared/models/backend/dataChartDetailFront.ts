@@ -10,8 +10,11 @@
  * Do not edit the class manually.
  */
 
+import { DowntimeCauseDetailFront } from "./downtimeCauseDetail";
+
 export interface DataChartDetailFront { 
     name: string;
     value: number;
     obj: number;
+    details?: Array<DowntimeCauseDetailFront>;
 }

@@ -1,5 +1,5 @@
 // For App version in navBar component
-export const version = '1.0.0';
+export const version = '1.1.0';
 
 // For Material Date Picker Format 'DD/MM/YYYY'
 export const MY_DATE_FORMAT = {

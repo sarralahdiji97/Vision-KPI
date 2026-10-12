@@ -15,19 +15,23 @@ import { MultiSelectComponent } from '../../../../../shared/components/multi-sel
   styleUrl: './details.scss',
 })
 export class Details {
-  @ViewChild('detailsChart') detailsChart!: ChartComponent;
+  @ViewChild('detailsChartByKW') detailsChartByKW!: ChartComponent;
+  @ViewChild('detailsChartByMonth') detailsChartByMonth!: ChartComponent;
   @ViewChild('selectedAnnee') selectedAnnee!: MultiSelectComponent;
-  public detailsChartOptions!: Partial<ChartOptions>;
+  public detailsChartOptionsByKW!: Partial<ChartOptions>;
+  public detailsChartOptionsByMonth!: Partial<ChartOptions>;
   public yearPeriodsFiltred!: Period[];
   public yearOfDateTime!: string;
   public drillValue!:string;
   public indicator!:string;
   public project!:string;
   public detailData:DataChartDetail[]=[];
+  public detailDataByMonth:DataChartDetail[]=[];
   public selectedYear: Period | undefined;
   public yearPeriods!: Period[];
   public hasObjective!:boolean;
   public titleChart!:string;
+  public titleChartMonth!:string;
   public titleToal!:string;
   public unit!:string;
   // KPI de la période
@@ -38,7 +42,7 @@ export class Details {
     private dashboardService:DashboardService,
     private router:Router
   ){
-    this.detailsChartOptions = {
+    this.detailsChartOptionsByKW = {
      chart: {
         type: 'bar',
         height: 500,
@@ -110,6 +114,73 @@ legend: {
     },
   ],
       }
+
+    this.detailsChartOptionsByMonth = {
+     chart: {
+        type: 'bar',
+        height: 500,
+        animations: {
+            enabled: false
+           },
+           toolbar: {
+           show: true,
+           tools: {
+                download: true,
+                selection: false,
+                zoom: false,
+                zoomin: false,
+                zoomout: false,
+                pan: false,
+                reset: false,
+              },
+           }
+       },
+    
+     stroke: {
+    width: 0,
+  },
+fill: {
+  type: 'solid',
+  opacity: 1
+},
+  plotOptions: {
+    bar: {
+        horizontal: false,
+      columnWidth: '55%',
+      borderRadius: 4,
+      distributed:true,
+        dataLabels: {
+    position:'top'
+  },
+    }
+  },
+
+
+
+  xaxis: {
+    categories: []
+  },
+
+    tooltip: {
+    y: {
+      formatter: (value: number) =>
+        this.indicator === OverviewName.Efficience
+          ? `${value}%`
+          : `${value}`
+    }
+  },
+legend: {
+  show: false
+},
+
+  series: [
+       {
+      name: 'Efficience',
+      type: 'column',
+      data: []
+    },
+  ],
+      }
   }
 
 get ecart(): number {
@@ -133,6 +204,7 @@ private computeKpi(data: { value?: number; obj?: number }[]) {
      this.indicator = params['indicator'];
      this.project = params['project'];
      this.titleChart = 'Evolution ' + this.drillValue.substring(2) + ' Par KW';
+     this.titleChartMonth = 'Evolution ' + this.drillValue.substring(2) + ' Par Mois';
      this.indicator == OverviewName.Efficience ?
        this.titleToal ='Efficience' :
      this.indicator == OverviewName.Min_Prod ?
@@ -179,7 +251,7 @@ private computeKpi(data: { value?: number; obj?: number }[]) {
   loadData(startDate:string, endDate:string, indicator:string, drillValue:string, project:string){
       this.dashboardService.getDashboardProd(startDate, endDate, project, indicator, drillValue).subscribe(
         (data)=>{
-          switch(this.drillValue.charAt(0)){
+          /*switch(this.drillValue.charAt(0)){
             case 'A':
               //----------------------------------Affectation---------------------------------------
                this.detailData = data.affect as DataChartDetail[];
@@ -196,8 +268,11 @@ private computeKpi(data: { value?: number; obj?: number }[]) {
               //----------------------------project----------------------------------------------
               this.detailData = data.proj as DataChartDetail[];
               break;    
-          }
+          }*/
           this.computeKpi(data.total as DataChartDetail[])
+
+          //-----------------chart by KW---------------------------------------    
+          this.detailData = data.byWeek as DataChartDetail[];
                const unit =
                     this.indicator === OverviewName.Efficience
                       ? ' %'
@@ -249,25 +324,25 @@ private computeKpi(data: { value?: number; obj?: number }[]) {
 
                     // Sans objectif
                     return '#1976D2';
-                    })
-                ;
+                    });
+
              const maxData = Math.max(
               ...this.detailData.map(d => Math.max(d.value ?? 0, d.obj ?? 0))
             );
             const yMax = Math.ceil((maxData * 1.1) / 10) * 10; // +10 % arrondi à la dizaine
-             this.detailsChartOptions = {
-                ...this.detailsChartOptions,
+             this.detailsChartOptionsByKW = {
+                ...this.detailsChartOptionsByKW,
 
                 xaxis: {
                   categories: categories
                 },
 
                 yaxis: {
-                ...this.detailsChartOptions.yaxis,
-                min: 0,
-                max: yMax,
-              },
-              tooltip: {
+                 ...this.detailsChartOptionsByKW.yaxis,
+                 min: 0,
+                 max: yMax,
+                },
+               tooltip: {
                 enabled: true,
 
                 custom: ({ series, seriesIndex, dataPointIndex, w }) => {
@@ -331,27 +406,27 @@ private computeKpi(data: { value?: number; obj?: number }[]) {
                 points: valueLabels,
               },*/
               dataLabels: {
-    enabled: true,
+                    enabled: true,
 
-    formatter: (value: number) => {
-        return this.indicator === OverviewName.Efficience
-            ? `${value}%`
-            : `${value}`;
-    },
+                    formatter: (value: number) => {
+                        return this.indicator === OverviewName.Efficience
+                            ? `${value}%`
+                            : `${value}`;
+                    },
 
-    offsetY: -6,
-    style: {
-           colors: ['#000000'],
-          fontSize: '14px',
-          fontWeight: 600,
-    }
-},
+                    offsetY: -6,
+                    style: {
+                          colors: ['#000000'],
+                          fontSize: '14px',
+                          fontWeight: 600,
+                    }
+                },
 
               // place pour que le texte ne soit pas coupé en haut
               grid: {
-                ...this.detailsChartOptions.grid,
+                ...this.detailsChartOptionsByMonth.grid,
                 padding: {
-                  ...this.detailsChartOptions.grid?.padding,
+                  ...this.detailsChartOptionsByMonth.grid?.padding,
                   top: 30,
                 },
               },
@@ -378,6 +453,170 @@ private computeKpi(data: { value?: number; obj?: number }[]) {
 
                             strokeHeight: 3,
                             strokeWidth: 10,
+                            strokeLineCap: 'butt',
+                            strokeColor: '#ee3d3d',
+                          }
+                        ];
+
+                      }
+
+                      return barData;
+                    }),
+                  }
+                ],
+              };
+
+              //--------------------Chart By Month------------------------------------------
+              this.detailDataByMonth = data.byMonth as DataChartDetail[];
+              const categoriesMonth = this.detailDataByMonth.map(x => x.name ?? '');
+              const barColorsMonth = this.detailDataByMonth.map(item => {
+              const value = item.value ?? 0;
+              const obj = item.obj ?? 0;
+                // Avec objectif
+                if (this.hasObjective) {
+                  return value < obj
+                    ? '#F59E0B'
+                    : '#16A34A';
+                }
+
+                // Sans objectif
+                return '#1976D2';
+                });
+
+                const valueLabelsMonth = this.detailDataByMonth.map(item => {
+                const value = item.value ?? 0;
+                const obj = item.obj ?? 0;
+
+                return {
+                  x: item.name,
+                  y: this.hasObjective ? Math.max(value, obj) : value,
+                  marker: { size: 0 },
+                  label: {
+                    text: this.indicator === OverviewName.Efficience ? `${value}%` : `${value}`,
+                    offsetY: -7,
+                    borderWidth: 0,
+                     // cssClass: 'value-label-vertical',
+                    style: {
+                      background: 'transparent',
+                      color: '#333333',
+                      fontSize: '14px',
+                      fontWeight: 600,
+                    },
+              
+                  },
+                };
+              });
+              const maxDataMonth = Math.max(
+                ...this.detailDataByMonth.map(d => Math.max(d.value ?? 0, d.obj ?? 0))
+              );
+              const yMaxMonth = Math.ceil((maxDataMonth * 1.1) / 10) * 10; // +10 % arrondi à la dizaine
+               this.detailsChartOptionsByMonth = {
+                ...this.detailsChartOptionsByMonth,
+
+                xaxis: {
+                  categories: categoriesMonth
+                },
+
+                yaxis: {
+                 ...this.detailsChartOptionsByMonth.yaxis,
+                 min: 0,
+                 max: yMaxMonth,
+                },
+               tooltip: {
+                enabled: true,
+
+                custom: ({ series, seriesIndex, dataPointIndex, w }) => {
+
+                  const data = this.detailData[dataPointIndex];
+
+                  if (!data) {
+                    return '';
+                  }
+
+                const value = data.value ?? 0;
+                const obj = data.obj ?? 0;
+
+              return `
+                <div class="apexcharts-tooltip-custom">
+
+                  <div class="tooltip-title">
+                    ${data.name}
+                  </div>
+
+                  <div class="tooltip-row">
+
+                    <span class="tooltip-label">
+                      ${tooltipValue}
+                    </span>
+
+                    <span class="tooltip-value">
+                      ${value}${unit}
+                    </span>
+
+                  </div>
+
+                  ${
+                    this.hasObjective
+                      ? `
+                        <div class="tooltip-row">
+
+                          <span class="tooltip-label">
+                            Objectif
+                          </span>
+
+                          <span class="tooltip-value">
+                            ${obj}${unit}
+                          </span>
+
+                        </div>
+                      `
+                      : ''
+                    }
+
+                 </div>
+                `;
+               }
+               },
+              colors: barColorsMonth,
+                dataLabels: {
+                enabled: false
+              },
+               // ✅ les valeurs sont maintenant des annotations
+              annotations: {
+                points: valueLabelsMonth,
+              },
+
+              // place pour que le texte ne soit pas coupé en haut
+              grid: {
+                ...this.detailsChartOptionsByMonth.grid,
+                padding: {
+                  ...this.detailsChartOptionsByMonth.grid?.padding,
+                  top: 30,
+                },
+              },
+              series: [
+                  {
+                    type: 'bar',
+
+                    data: this.detailDataByMonth.map(data => {
+
+                      const barData: any = {
+                        x: data.name,
+                        y: data.value,
+                      };
+
+                      // Ajouter l'objectif UNIQUEMENT
+                      // pour Efficience / Min Prod
+
+                      if (this.hasObjective) {
+
+                        barData.goals = [
+                          {
+                            name: "Objectif de l'affectation",
+                            value: data.obj,
+
+                            strokeHeight: 3,
+                            strokeWidth: 17,
                             strokeLineCap: 'butt',
                             strokeColor: '#ee3d3d',
                           }

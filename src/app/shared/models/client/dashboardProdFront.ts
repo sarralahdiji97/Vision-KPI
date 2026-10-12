@@ -7,6 +7,8 @@ export interface DashboardProd {
     sect?: DataChartDetail[];
     proj?: DataChartDetail[];
     total?: DataChartDetail[];
+    byWeek?: DataChartDetail[];
+    byMonth?: DataChartDetail[];
 }
 
 export function mapToDashboardProd(data: DashboardProdFront): DashboardProd {
@@ -16,5 +18,7 @@ export function mapToDashboardProd(data: DashboardProdFront): DashboardProd {
        sect: data && data.sect && data.sect.length && data.sect.map(x => mapToDataChartDetail(x)) || [],
        proj: data && data.proj && data.proj.length && data.proj.map(x => mapToDataChartDetail(x)) || [],
        total: data && data.total && data.total.length && data.total.map(x => mapToDataChartDetail(x)) || [],
+       byWeek: data && data.byWeek && data.byWeek.length && data.byWeek.map(x => mapToDataChartDetail(x)) || [],
+       byMonth: data && data.byMonth && data.byMonth.length && data.byMonth.map(x => mapToDataChartDetail(x)) || [],
     }
 }

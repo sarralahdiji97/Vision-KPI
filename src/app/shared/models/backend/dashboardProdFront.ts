@@ -18,5 +18,6 @@ export interface DashboardProdFront {
     sect?: Array<DataChartDetailFront>;
     proj?: Array<DataChartDetailFront>;
     total?: Array<DataChartDetailFront>;
-      
+    byWeek?: Array<DataChartDetailFront>;
+    byMonth?: Array<DataChartDetailFront>;
 }
